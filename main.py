@@ -1,195 +1,114 @@
-import os
-os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
-import pygame
-import neat
-import time
 import random
-pygame.font.init()
+import time
+import neat
+import pygame
+import os
+from cactus import *
+from base import *
+from dino import *
+from draw import *
 
 WIN_WIDTH = 1200
 WIN_HEIGHT = 700
 
-DINO_IMGS = [pygame.image.load(os.path.join("images", "DinoJump.png")),
-             pygame.image.load(os.path.join("images", "DinoRun1.png")),
-             pygame.image.load(os.path.join("images", "DinoRun2.png"))]
+def main(genomes: neat.DefaultGenome, config: neat.Config) -> None:
+    nets = []
+    ge = []
+    dinos = []
+    base = Base()
+    cactuses = [Cactus()]
+    background = Background()
 
-CACTUS_IMGS = [pygame.image.load(os.path.join("images", "LargeCactus1.png")),
-            pygame.image.load(os.path.join("images", "LargeCactus2.png")),
-            pygame.image.load(os.path.join("images", "LargeCactus3.png")),
-            pygame.image.load(os.path.join("images", "SmallCactus1.png")),
-            pygame.image.load(os.path.join("images", "SmallCactus2.png")),
-            pygame.image.load(os.path.join("images", "SmallCactus3.png"))]
-
-BASE_IMG = pygame.transform.scale2x(pygame.image.load(os.path.join("images", "Track.png")))
-
-STAT_FONT = pygame.font.SysFont("comicsans", 50)
-
-class Dino:
-    IMGS = DINO_IMGS
-    ANIMATION_TIME = 5
-    JUMP_TIME = 20
-
-    def __init__(self):
-        self.tick_count = 0
-        self.img = self.IMGS[0]
-        self.x = 400
-        self.y = 550
-        self.height = 10
-        self.jump_flag = False
-        self.img_count_run = 0
-        self.img_count_jump = 0
-
-    def jump_motion(self, win):
-        if(self.jump_flag):
-            self.img_count_jump += 1
-
-            if self.img_count_jump < self.JUMP_TIME:
-                self.img = self.IMGS[0]
-
-            if(self.img_count_jump < self.JUMP_TIME/2):
-                self.y -= 20
-            else:
-                self.y += 10
-                if(self.y == 550):
-                    self.img_count_jump = 0
-                    self.jump_flag = False
-                
-            win.blit(self.img, (self.x, self.y))
+    score = 0
     
-    def run_motion(self,win):
-        if(not self.jump_flag):
-            self.img_count_run += 1
+    for _, g in genomes: 
+        net = neat.nn.FeedForwardNetwork.create(g, config) 
+        nets.append(net) 
+        dinos.append(Dino())
+        g.fitness = 0 
+        ge.append(g)
 
-            if self.img_count_run < self.ANIMATION_TIME:
-                self.img = self.IMGS[1]
-            elif self.img_count_run < self.ANIMATION_TIME*2:
-                self.img = self.IMGS[2]
-            elif self.img_count_run > self.ANIMATION_TIME*2:  
-                self.img_count_run = 0
-            
-            win.blit(self.img, (self.x, self.y))
+    win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+    clock = pygame.time.Clock()
 
-    def get_mask(self):
-        return pygame.mask.from_surface(self.img)
+    run = True
 
-#-------------------------------------------------------------------------------
+    while run:
+        clock.tick(30)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                pygame.quit()
+                quit()
+                
+        cactus_ind = 0
 
-class Base:
-    VEL = 10
-    WIDTH = BASE_IMG.get_width()
-    IMG = BASE_IMG
-
-    def __init__(self):
-        self.y = 620
-        self.x1 = 0
-        self.x2 = self.WIDTH
-
-    def move(self):
-        self.x1 -= self.VEL
-        self.x2 -= self.VEL
-
-        if self.x1 + self.WIDTH < 0:
-            self.x1 = self.x2 + self.WIDTH
-        
-        if self.x2 + self.WIDTH < 0:
-            self.x2 = self.x1 + self.WIDTH
-
-    def draw(self, win):
-        win.blit(self.IMG, (self.x1, self.y))
-        win.blit(self.IMG, (self.x2, self.y))
-
-class Cactus:
-    VEL = 10
-
-    def __init__(self):
-        self.x = 1200
-        self.y = 550
-        self.height = 0
-        self.top = 0
-        self.bottom = 0
-        self.passed = False
-        self.random_num = random.randrange(0,6)
-
-        if(self.random_num>=3):
-            self.y = 570
-
-        self.cactus_img = CACTUS_IMGS[self.random_num]
-
-    def move(self):
-        self.x -= self.VEL
-
-    def draw(self, win):
-        win.blit(self.cactus_img, (self.x, self.y))
-
-    def collide(self, dino):
-        dino_mask = dino.get_mask()
-        cactus_mask = pygame.mask.from_surface(self.cactus_img)
-
-        if (dino_mask.overlap(cactus_mask, (self.x - dino.x, self.y - dino.y))):
-            print("COLLIDE")
-
-        return dino_mask.overlap(cactus_mask, (self.x - dino.x, self.y - dino.y))
-        
-        
-
-
-dino = Dino()
-base = Base()
-cactuses = []
-cactuses.append(Cactus())
-        
-win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
-
-color = (255,255,255)
-win.fill(color)
-pygame.display.update()
-
-clock = pygame.time.Clock()
-
-pygame.display.update()
-
-run = True
-
-add_cactus = False
-
-while run:
-    clock.tick(30)
-
-    win.fill(color)
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+        if len(dinos) > 0:
+            if len(cactuses) > 1 and dinos[0].x > cactuses[0].x + cactuses[0].cactus_img.get_width():
+                cactus_ind = 1
+        else:
             run = False
-            pygame.quit()
-            quit()
+            break
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                dino.jump_flag = True
+        for x, dino in enumerate(dinos):
+            dino.motion(win)
+            ge[x].fitness += 0.1
 
-    dino.run_motion(win)
-    dino.jump_motion(win)
-    base.draw(win)
-    base.move()
+            output = nets[x].activate((dino.x + dino.img.get_width(), cactuses[cactus_ind].x))
 
-    for cactus in cactuses:
-        if cactus.x == dino.x:
-            add_cactus = True
+            if output[0] > 0.5:
+                dino.jump()
 
-        if cactus.x < 0:
-            cactuses.remove(cactus)
-
-        cactus.draw(win)
-        cactus.move()
-        cactus.collide(dino)
-
-    if (add_cactus):
-        cactuses.append(Cactus())
         add_cactus = False
+        rem = []
+        for cactus in cactuses:
+            for x, dino in enumerate(dinos):
+                if cactus.collide(dino):
+                    ge[x].fitness -= 1
+                    dinos.pop(x)
+                    nets.pop(x)
+                    ge.pop(x)
+            
+                if not cactus.passed and cactus.x < dino.x:
+                    cactus.passed = True
 
-    pygame.display.update()
+            if cactus.x + cactus.cactus_img.get_width() < 0:
+                rem.append(cactus)
+            
+            if (cactus.x == dino.x):
+                score += 1
 
+            cactus.move()
+            
+            if cactus.passed:
+                for g in ge:
+                    g.fitness += 5
 
+        adding_cactus(cactuses)
         
+        for r in rem:
+            cactuses.remove(r)
 
+        background.move()
+        base.move()
+        draw_window(win, background, dinos, cactuses, base, score)
 
+def run(config_path: os.path) -> None:
+    config = neat.config.Config(neat.DefaultGenome,            
+                                neat.DefaultReproduction,
+                                neat.DefaultSpeciesSet, 
+                                neat.DefaultStagnation,
+                                config_path)
+
+    p = neat.Population(config)
+
+    p.add_reporter(neat.StdOutReporter(True))
+    stats = neat.StatisticsReporter()
+    p.add_reporter(stats)
+
+    winner = p.run(main,50) 
+                
+if __name__ == "__main__":
+    local_dir = os.path.dirname(__file__) 
+    config_path = os.path.join(local_dir, "config.txt")
+    run(config_path) 
