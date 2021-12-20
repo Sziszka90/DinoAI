@@ -61,16 +61,16 @@ def main(genomes: neat.DefaultGenome, config: neat.Config) -> None:
             output = nets[x].activate(direction(dino, obstacles, obstacle_ind))
 
             if(type(obstacles[obstacle_ind]) == type(Bird())):
-                if output[0] > 0.5:
+                if output[0] == 1:
                     dino.down()
             elif(type(obstacles[obstacle_ind]) == type(Cactus())):
-                if output[1] > 0.5:
+                if output[1] == 1:
                     dino.jump()
             
             dino.motion()
           
-            if (not dino.jump_flag and dino.down_flag):
-                ge[x].fitness += 0.1
+            
+            ge[x].fitness += 0.1
 
         add_obstacle = False
 
