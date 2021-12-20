@@ -6,9 +6,12 @@ from base import *
 from dino import *
 from draw import *
 from utils import direction
+from decouple import config
 
 WIN_WIDTH = 1200
 WIN_HEIGHT = 700
+
+generation = 0
 
 def main(genomes: neat.DefaultGenome, config: neat.Config) -> None:
     nets = []
@@ -19,11 +22,14 @@ def main(genomes: neat.DefaultGenome, config: neat.Config) -> None:
     background = Background()
     reset_adding_obstacle()
 
-    timer_output = 0
-
     score = 0
+    global generation
+    generation += 1
+    population_size = 0
+    status = {}
     
     for _, g in genomes: 
+        print(len(genomes))
         net = neat.nn.FeedForwardNetwork.create(g, config) 
         nets.append(net) 
         dinos.append(Dino())
@@ -99,21 +105,29 @@ def main(genomes: neat.DefaultGenome, config: neat.Config) -> None:
 
         adding_obstacle(obstacles)
 
+        population_size = len(dinos)
+
+        status["score"] = score
+        status["generation"] = generation
+        status["population_size"] = population_size
+
+
         background.move()
         base.move()
-        draw_window(win, background, dinos, obstacles, base, score)
+        draw_window(win, background, dinos, obstacles, base, status)
 
 def run(config_path: os.path) -> None:
-    config = neat.config.Config(neat.DefaultGenome,            
+    config_neat = neat.config.Config(neat.DefaultGenome,            
                                 neat.DefaultReproduction,
                                 neat.DefaultSpeciesSet, 
                                 neat.DefaultStagnation,
                                 config_path)
 
-    p = neat.Population(config)
+    p = neat.Population(config_neat)
 
     p.add_reporter(neat.StdOutReporter(True))
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
 
-    winner = p.run(main,50) 
+    MAX_GEN = int(config('MAXGENERATIONS'))
+    winner = p.run(main,MAX_GEN) 

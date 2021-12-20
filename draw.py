@@ -58,11 +58,17 @@ def reset_adding_obstacle():
     cactus_tick = 0
     bird_tick = 0
 
-def draw_window(win: pygame.Surface, background: Background, dinos: Dino, obstacles: list, base: Base, score: int) -> None:
+def draw_window(win: pygame.Surface, background: Background, dinos: Dino, obstacles: list, base: Base, status: dict) -> None:
     background.draw(win)
 
-    text = STAT_FONT.render("Score: " + str(score),1,(0,0,0))
+    text = STAT_FONT.render("Score: " + str(status["score"]),1,(0,0,0))
     win.blit(text,(10, 10))
+
+    text = STAT_FONT.render("Running generation: " + str(status["generation"]),1,(0,0,0))
+    win.blit(text,(10, 45))
+
+    text = STAT_FONT.render("Population size: " + str(status["population_size"]),1,(0,0,0))
+    win.blit(text,(10, 80))
 
     base.draw(win)
 
