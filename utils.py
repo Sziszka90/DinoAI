@@ -13,14 +13,10 @@ def direction(dino: Dino, obstacles: list, obstacle_ind: int) -> list:
 
     distance_to_obstacle = [obstacles[obstacle_ind].x - (dino.x + dino.img.get_width())]
 
-    height_of_obstacle = [obstacles[obstacle_ind].img.get_height()]
-
     width_of_obstacle = [obstacles[obstacle_ind].img.get_width()]
 
-    height_pos_obstacle = [obstacles[obstacle_ind].y]
+    height_of_obstacle = [obstacles[obstacle_ind].img.get_height()]
 
-    dino_pos = [dino.y]
+    height_obstacle = [obstacles[obstacle_ind].y]
 
-    obstacle_type = [obstacles[obstacle_ind].type]
-  
-    return distance_to_obstacle + height_of_obstacle + width_of_obstacle + height_pos_obstacle + dino_pos + obstacle_type
+    return distance_to_obstacle + width_of_obstacle + height_obstacle + height_of_obstacle

@@ -20,7 +20,7 @@ class Bird:
 
     def __init__(self):
         self.x = 1200
-        self.y = 500
+        self.y = 550
         self.passed = False
         self.img_count_bird = 0
         self.img = self.IMGS[0]

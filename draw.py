@@ -30,6 +30,7 @@ def adding_obstacle(obstacles: list) -> None:
 
     if (not generate_random_num):
         random_num = random.randrange(rand_range[0], rand_range[1])
+        random_bird_height = random.randrange(0,2)
         generate_random_num = True
         random_obstacle = random.randrange(0,2)
 

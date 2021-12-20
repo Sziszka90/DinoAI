@@ -18,7 +18,7 @@ def main(genomes: neat.DefaultGenome, config: neat.Config) -> None:
     ge = []
     dinos = []
     base = Base()
-    obstacles = [Bird()]
+    obstacles = [Cactus()]
     background = Background()
     reset_adding_obstacle()
 
@@ -59,17 +59,11 @@ def main(genomes: neat.DefaultGenome, config: neat.Config) -> None:
         
         for x, dino in enumerate(dinos):
             output = nets[x].activate(direction(dino, obstacles, obstacle_ind))
+            if output[0] > 0.5:
+                dino.jump()
 
-            if(type(obstacles[obstacle_ind]) == type(Bird())):
-                if output[0] == 1:
-                    dino.down()
-            elif(type(obstacles[obstacle_ind]) == type(Cactus())):
-                if output[1] == 1:
-                    dino.jump()
-            
             dino.motion()
           
-            
             ge[x].fitness += 0.1
 
         add_obstacle = False
