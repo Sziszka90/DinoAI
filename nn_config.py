@@ -29,7 +29,6 @@ def main(genomes: neat.DefaultGenome, config: neat.Config) -> None:
     status = {}
     
     for _, g in genomes: 
-        print(len(genomes))
         net = neat.nn.FeedForwardNetwork.create(g, config) 
         nets.append(net) 
         dinos.append(Dino())
