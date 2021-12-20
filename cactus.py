@@ -18,6 +18,7 @@ CACTUS_IMGS = [pygame.image.load(os.path.join("images", "LargeCactus1.png")),
 
 class Cactus:
     VEL = int(config('SPEED'))
+    IMGS = CACTUS_IMGS
 
     check_speed(VEL)
 
@@ -26,21 +27,22 @@ class Cactus:
         self.y = 550
         self.passed = False
         self.random_cactus = random.randrange(0, 6)
+        self.type = 1
 
         if(self.random_cactus >= 3):
             self.y = 570
 
-        self.cactus_img = CACTUS_IMGS[self.random_cactus]
+        self.img = self.IMGS[self.random_cactus]
 
     def move(self) -> None:
         self.x -= self.VEL
 
     def draw(self, win: pygame.Surface) -> None:
-        win.blit(self.cactus_img, (self.x, self.y))
+        win.blit(self.img, (self.x, self.y))
 
     def collide(self, dino: Dino) -> bool:
         dino_mask = dino.get_mask()
-        cactus_mask = pygame.mask.from_surface(self.cactus_img)
+        cactus_mask = pygame.mask.from_surface(self.img)
 
         return dino_mask.overlap(cactus_mask, (self.x - dino.x, self.y - dino.y))
 

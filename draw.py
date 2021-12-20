@@ -1,43 +1,67 @@
 import random
 import pygame
 from cactus import *
+from bird import *
 from dino import *
 from base import *
 from background import *
-import sys
 
 STAT_FONT = pygame.font.SysFont("comicsans", 50)
 
 cactus_tick = 0
+bird_tick = 0
 generate_random_num = False
 random_num = 0
+random_obstacle = 0
 
-def adding_cactus(cactuses: list) -> None:
+def adding_obstacle(obstacles: list) -> None:
+
+    VEL = int(config('SPEED'))
+
+    global random_obstacle
     global cactus_tick
-    cactus_tick += 1
-
+    global bird_tick
     global generate_random_num
     global random_num
 
-    VEL = int(config('SPEED'))
     rand_range = []
-    rand_range.append(round((50/VEL)*10))       
+    rand_range.append(round((50/VEL)*10))    
     rand_range.append(round((100/VEL)*10))
 
     if (not generate_random_num):
         random_num = random.randrange(rand_range[0], rand_range[1])
         generate_random_num = True
+        random_obstacle = random.randrange(0,2)
 
-    if (cactus_tick == random_num):
-        cactuses.append(Cactus())
-        generate_random_num = False
-        cactus_tick = 0
+    if(random_obstacle == 0) and generate_random_num:
+        cactus_tick += 1
 
-def draw_window(win: pygame.Surface, background: Background, dinos: Dino, cactuses: list, base: Base, score: int) -> None:
+        if (cactus_tick == random_num):
+            obstacles.append(Cactus())
+            generate_random_num = False
+            cactus_tick = 0
+    elif(random_obstacle == 1) and generate_random_num:
+        bird_tick += 1
+
+        if (bird_tick == random_num):
+            obstacles.append(Bird())
+            generate_random_num = False
+            bird_tick = 0
+
+
+def reset_adding_obstacle():
+
+    global cactus_tick
+    global bird_tick
+    global generate_random_num
+
+    generate_random_num = False
+    cactus_tick = 0
+    bird_tick = 0
+
+
+def draw_window(win: pygame.Surface, background: Background, dinos: Dino, obstacles: list, base: Base, score: int) -> None:
     background.draw(win)
-
-    for cactus in cactuses:
-        cactus.draw(win)
 
     text = STAT_FONT.render("Score: " + str(score),1,(0,0,0))
     win.blit(text,(10, 10))
@@ -46,6 +70,9 @@ def draw_window(win: pygame.Surface, background: Background, dinos: Dino, cactus
 
     for dino in dinos:
         dino.draw(win)
+
+    for obstacle in obstacles:
+        obstacle.draw(win)
 
     pygame.display.set_caption('Mozilla Dino AI')
 

@@ -1,6 +1,5 @@
 import pygame
 import os
-import random
 from decouple import config
 from utils import check_speed
 
