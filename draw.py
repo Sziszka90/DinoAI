@@ -48,7 +48,6 @@ def adding_obstacle(obstacles: list) -> None:
             generate_random_num = False
             bird_tick = 0
 
-
 def reset_adding_obstacle():
 
     global cactus_tick
@@ -58,7 +57,6 @@ def reset_adding_obstacle():
     generate_random_num = False
     cactus_tick = 0
     bird_tick = 0
-
 
 def draw_window(win: pygame.Surface, background: Background, dinos: Dino, obstacles: list, base: Base, score: int) -> None:
     background.draw(win)
