@@ -83,7 +83,6 @@ def main(genomes: neat.DefaultGenome, config: neat.Config) -> None:
             if obstacle.x + obstacle.img.get_width() < 0:
                 rem.append(obstacle)
 
-            
             score += 0.01
             
             obstacle.move()
@@ -102,7 +101,6 @@ def main(genomes: neat.DefaultGenome, config: neat.Config) -> None:
         status["score"] = round(score)
         status["generation"] = generation
         status["population_size"] = population_size
-
 
         background.move()
         base.move()
