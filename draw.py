@@ -15,7 +15,6 @@ random_num = 0
 random_obstacle = 0
 
 def adding_obstacle(obstacles: list) -> None:
-
     VEL = int(config('SPEED'))
 
     global random_obstacle
@@ -23,6 +22,7 @@ def adding_obstacle(obstacles: list) -> None:
     global bird_tick
     global generate_random_num
     global random_num
+    global random_bird_height
 
     rand_range = []
     rand_range.append(round((50/VEL)*10))    
@@ -31,8 +31,8 @@ def adding_obstacle(obstacles: list) -> None:
     if (not generate_random_num):
         random_num = random.randrange(rand_range[0], rand_range[1])
         random_bird_height = random.randrange(0,2)
-        generate_random_num = True
         random_obstacle = random.randrange(0,2)
+        generate_random_num = True
 
     if(random_obstacle == 0) and generate_random_num:
         cactus_tick += 1
@@ -45,12 +45,14 @@ def adding_obstacle(obstacles: list) -> None:
         bird_tick += 1
 
         if (bird_tick == random_num):
-            obstacles.append(Bird())
+            if(random_bird_height == 0):
+                obstacles.append(Bird(550))
+            elif(random_bird_height == 1):
+                obstacles.append(Bird(490))
             generate_random_num = False
             bird_tick = 0
 
 def reset_adding_obstacle():
-
     global cactus_tick
     global bird_tick
     global generate_random_num

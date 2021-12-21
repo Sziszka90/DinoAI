@@ -3,16 +3,14 @@ import os
 from decouple import config
 from utils import check_speed
 
-BASE_IMG = pygame.transform.scale2x(
-           pygame.image.load(os.path.join("images", "Track.png")))
+BASE_IMG = pygame.transform.scale2x(pygame.image.load(os.path.join("images", "Track.png")))
 
 class Base:
     VEL = int(config('SPEED'))
-
-    check_speed(VEL)
-
     WIDTH = BASE_IMG.get_width()
     IMG = BASE_IMG
+
+    check_speed(VEL)
 
     def __init__(self):
         self.y = 620

@@ -2,14 +2,14 @@ import sys
 from dino import *
 
 def check_speed(VEL: int) -> None:
-    if(VEL < 10):
-        print("Increase speed! Min. 10")
+    if(VEL < 20):
+        print("Increase speed! Min. 20")
         sys.exit()
-    elif(VEL > 20):
-        print("Reduce speed! Max. 20")
+    elif(VEL > 30):
+        print("Reduce speed! Max. 30")
         sys.exit()
 
-def direction(dino: Dino, obstacles: list, obstacle_ind: int) -> list:
+def directions(dino: Dino, obstacles: list, obstacle_ind: int) -> list:
 
     distance_to_obstacle = [obstacles[obstacle_ind].x - (dino.x + dino.img.get_width())]
 
@@ -17,6 +17,6 @@ def direction(dino: Dino, obstacles: list, obstacle_ind: int) -> list:
 
     height_of_obstacle = [obstacles[obstacle_ind].img.get_height()]
 
-    height_obstacle = [obstacles[obstacle_ind].y]
+    distance_from_ground = [(620 - (obstacles[obstacle_ind].y + obstacles[obstacle_ind].img.get_height()))]
 
-    return distance_to_obstacle + width_of_obstacle + height_obstacle + height_of_obstacle
+    return distance_to_obstacle + width_of_obstacle + height_of_obstacle + distance_from_ground

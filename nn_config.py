@@ -5,7 +5,7 @@ from cactus import *
 from base import *
 from dino import *
 from draw import *
-from utils import direction
+from utils import directions
 from decouple import config
 
 WIN_WIDTH = 1200
@@ -18,25 +18,23 @@ def main(genomes: neat.DefaultGenome, config: neat.Config) -> None:
     ge = []
     dinos = []
     base = Base()
-    obstacles = [Cactus()]
+    obstacles = [Bird(495)]
     background = Background()
     reset_adding_obstacle()
-
     score = 0
     global generation
     generation += 1
     population_size = 0
     status = {}
+    win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+    clock = pygame.time.Clock()
     
     for _, g in genomes: 
-        net = neat.nn.FeedForwardNetwork.create(g, config) 
-        nets.append(net) 
+        net = neat.nn.FeedForwardNetwork.create(g, config)
+        nets.append(net)  
         dinos.append(Dino())
         g.fitness = 0 
         ge.append(g)
-
-    win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
-    clock = pygame.time.Clock()
 
     run = True
 
@@ -58,15 +56,16 @@ def main(genomes: neat.DefaultGenome, config: neat.Config) -> None:
             break
         
         for x, dino in enumerate(dinos):
-            output = nets[x].activate(direction(dino, obstacles, obstacle_ind))
-            if output[0] > 0.5:
+            output = nets[x].activate(directions(dino, obstacles, obstacle_ind))
+
+            if output[0] > output[1] and output[0] > 0.5:
                 dino.jump()
+            elif output[1] > output[0] and output[1] > 0.5:
+                dino.down()
 
             dino.motion()
           
             ge[x].fitness += 0.1
-
-        add_obstacle = False
 
         rem = []
         
@@ -83,10 +82,10 @@ def main(genomes: neat.DefaultGenome, config: neat.Config) -> None:
 
             if obstacle.x + obstacle.img.get_width() < 0:
                 rem.append(obstacle)
-            
-            if (obstacle.x == dino.x):
-                score += 1
 
+            
+            score += 0.01
+            
             obstacle.move()
             
             if obstacle.passed:
@@ -100,7 +99,7 @@ def main(genomes: neat.DefaultGenome, config: neat.Config) -> None:
 
         population_size = len(dinos)
 
-        status["score"] = score
+        status["score"] = round(score)
         status["generation"] = generation
         status["population_size"] = population_size
 

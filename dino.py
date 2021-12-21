@@ -8,9 +8,9 @@ DINO_IMGS = [pygame.image.load(os.path.join("images", "DinoJump.png")),
              pygame.image.load(os.path.join("images", "dino_down_2.png"))]
 
 class Dino:
-    IMGS = DINO_IMGS
     ANIMATION_TIME = 5
     JUMP_TIME = 15
+    IMGS = DINO_IMGS
 
     def __init__(self):
         self.tick_count = 0
@@ -37,10 +37,11 @@ class Dino:
                 self.img = self.IMGS[0]
 
             if(self.img_count_jump < self.JUMP_TIME/2):
-                self.y -= 20
+                self.y -= 25
             else:
-                self.y += 10
-                if(self.y == 550):
+                self.y += 25
+                if(self.y >= 550):
+                    self.y = 550
                     self.img_count_jump = 0
                     self.jump_flag = False
     

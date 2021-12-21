@@ -6,13 +6,11 @@ from utils import check_speed
 BG_IMG = pygame.image.load(os.path.join("images", "background.png"))
 
 class Background:
-
     VEL = int(config('SPEED'))
-
-    check_speed(VEL)
-
     WIDTH = BG_IMG.get_width()
     IMG = BG_IMG
+
+    check_speed(VEL)
 
     def __init__(self):
         self.y = 0
