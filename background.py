@@ -1,12 +1,12 @@
 import pygame
 import os
-from decouple import config
+from decouple import config as get_env_var
 from utils import check_speed
 
 BG_IMG = pygame.image.load(os.path.join("images", "background.png"))
 
 class Background:
-    VEL = int(config('SPEED'))
+    VEL = int(get_env_var('SPEED'))
     WIDTH = BG_IMG.get_width()
     IMG = BG_IMG
 

@@ -1,6 +1,6 @@
 import pygame
 import os
-from decouple import config
+from decouple import config as get_env_var
 from dino import *
 from utils import check_speed
 
@@ -12,7 +12,7 @@ BIRD_IMGS = [pygame.image.load(os.path.join("images", "bird_1.png")),
                pygame.image.load(os.path.join("images", "bird_2.png"))]
 
 class Bird:
-    VEL = int(config('SPEED'))
+    VEL = int(get_env_var('SPEED'))
     ANIMATION_TIME = 5
     IMGS = BIRD_IMGS
 
@@ -24,7 +24,6 @@ class Bird:
         self.passed = False
         self.img_count_bird = 0
         self.img = self.IMGS[0]
-        self.type = 1
 
     def move(self) -> None:
         self.x -= self.VEL

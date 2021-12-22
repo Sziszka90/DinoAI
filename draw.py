@@ -15,7 +15,7 @@ random_num = 0
 random_obstacle = 0
 
 def adding_obstacle(obstacles: list) -> None:
-    VEL = int(config('SPEED'))
+    VEL = int(get_env_var('SPEED'))
 
     global random_obstacle
     global cactus_tick
@@ -64,14 +64,12 @@ def reset_adding_obstacle():
 def draw_window(win: pygame.Surface, background: Background, dinos: Dino, obstacles: list, base: Base, status: dict) -> None:
     background.draw(win)
 
-    text = STAT_FONT.render("Score: " + str(status["score"]),1,(0,0,0))
-    win.blit(text,(10, 10))
+    state_pos_y = 10
 
-    text = STAT_FONT.render("Running generation: " + str(status["generation"]),1,(0,0,0))
-    win.blit(text,(10, 45))
-
-    text = STAT_FONT.render("Population size: " + str(status["population_size"]),1,(0,0,0))
-    win.blit(text,(10, 80))
+    for state in status:
+        text = STAT_FONT.render(state + str(status[state]),1,(0,0,0))
+        win.blit(text,(10, state_pos_y))
+        state_pos_y += 35
 
     base.draw(win)
 
