@@ -11,6 +11,16 @@ def check_speed(VEL: int) -> None:
         print("Reduce speed! Max. 30")
         sys.exit()
 
+def check_train(TRAIN: str) -> None:
+    if(TRAIN != "YES" and TRAIN != "NO"):
+        print("Please enter a valid value for TRAIN (YES or NO)")
+        sys.exit()
+
+def check_max_generations(MAXGENERATIONS: int) -> None:
+    if(MAXGENERATIONS <= 0 or MAXGENERATIONS > 100):
+        print("Max generations must be between 1 and 100")
+        sys.exit()
+
 def directions(dino: Dino, obstacles: list, obstacle_ind: int) -> list:
 
     distance_to_obstacle = [obstacles[obstacle_ind].x - (dino.x + dino.img.get_width())]

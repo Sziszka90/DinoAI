@@ -1,13 +1,16 @@
 import neat
+import pickle
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
-from cactus import *
-from base import *
-from dino import *
-from draw import *
-from utils import directions
-import pickle
+from bird import Bird
+from base import Base
+from background import Background
+from dino import Dino
+from draw import Draw
+from utils import directions, check_max_generations
+from decouple import config as get_env_var
+
 
 WIN_WIDTH = 1200
 WIN_HEIGHT = 700
@@ -16,21 +19,27 @@ generation = 0
 
 def main_training(genomes: neat.DefaultGenome, config: neat.Config) -> None:
     print("****** Running training... ******")
+
+    global generation
     nets = []
     ge = []
     dinos = []
-    base = Base()
     obstacles = [Bird(495)]
+
+    base = Base()
     background = Background()
-    reset_adding_obstacle()
+    draw = Draw()
+    
     score = 0
-    global generation
-    generation += 1
     population_size = 0
     status = {}
     max_fitness = 0
+
     win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
     clock = pygame.time.Clock()
+
+    generation += 1
+    draw.reset_adding_obstacle()
     
     for _, g in genomes: 
         net = neat.nn.FeedForwardNetwork.create(g, config)
@@ -88,18 +97,16 @@ def main_training(genomes: neat.DefaultGenome, config: neat.Config) -> None:
 
             score += 0.01
             
-            obstacle.move()
-            
             if obstacle.passed:
                 for g in ge:
                     g.fitness += 5
                     if(g.fitness > max_fitness):
                         max_fitness = g.fitness
+
+            obstacle.move()
         
         for r in rem:
             obstacles.remove(r)
-
-        adding_obstacle(obstacles)
 
         population_size = len(dinos)
 
@@ -112,18 +119,24 @@ def main_training(genomes: neat.DefaultGenome, config: neat.Config) -> None:
         status["Generation: "] = generation
         status["Population size: "] = population_size
         
+        draw.adding_obstacle(obstacles)
+
         background.move()
         base.move()
-        draw_window(win, background, dinos, obstacles, base, status)
+        draw.draw_window(win, background, dinos, obstacles, base, status)
 
 def main_solution(genome: neat.DefaultGenome, config: neat.Config) -> None:
     print("****** Running solution... ******")
+
     base = Base()
     obstacles = [Bird(495)]
     background = Background()
     dino = Dino()
+    draw = Draw()
+
     score = 0
     status = {}
+
     win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
     clock = pygame.time.Clock()
      
@@ -140,11 +153,9 @@ def main_solution(genome: neat.DefaultGenome, config: neat.Config) -> None:
                 quit()
                 
         obstacle_ind = 0
-        
-    
+         
         if ((len(obstacles) > 1) and (dino.x > obstacles[0].x + obstacles[0].img.get_width())):
             obstacle_ind = 1
-    
         
         output = net.activate(directions(dino, obstacles, obstacle_ind))
 
@@ -152,8 +163,6 @@ def main_solution(genome: neat.DefaultGenome, config: neat.Config) -> None:
             dino.jump()
         elif output[1] > output[0] and output[1] > 0.5:
             dino.down()
-
-        dino.motion()
 
         rem = []
         
@@ -174,15 +183,16 @@ def main_solution(genome: neat.DefaultGenome, config: neat.Config) -> None:
         for r in rem:
             obstacles.remove(r)
 
-        adding_obstacle(obstacles)
-
         status["Score: "] = round(score)
         status["Generation: "] = "Winner"
         status["Population size: "] = 1
 
+        draw.adding_obstacle(obstacles)
+
+        dino.motion()
         background.move()
         base.move()
-        draw_window(win, background, [dino], obstacles, base, status)
+        draw.draw_window(win, background, [dino], obstacles, base, status)
 
 def run(config: neat.Config) -> None:
     p = neat.Population(config)
@@ -192,6 +202,7 @@ def run(config: neat.Config) -> None:
     p.add_reporter(stats)
 
     MAXGENERATIONS = int(get_env_var('MAXGENERATIONS'))
+    check_max_generations(MAXGENERATIONS)
 
     winner = p.run(main_training, MAXGENERATIONS)
 
