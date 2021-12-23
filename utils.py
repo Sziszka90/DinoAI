@@ -3,13 +3,15 @@ from dino import *
 import pickle
 import neat
 
-def check_speed(VEL: int) -> None:
-    if(VEL < 20):
-        print("Increase speed! Min. 20")
+def handle_speed(VEL: int) -> int:
+    if(VEL <= 0):
+        print("Increase speed! Min. 1")
         sys.exit()
-    elif(VEL > 30):
-        print("Reduce speed! Max. 30")
+    elif(VEL > 10):
+        print("Reduce speed! Max. 10")
         sys.exit()
+    else:
+        return VEL+20
 
 def check_train(TRAIN: str) -> None:
     if(TRAIN != "YES" and TRAIN != "NO"):
@@ -20,6 +22,10 @@ def check_max_generations(MAXGENERATIONS: int) -> None:
     if(MAXGENERATIONS <= 0 or MAXGENERATIONS > 100):
         print("Max generations must be between 1 and 100")
         sys.exit()
+
+def increase_score(VEL: int,score: int) -> int:
+    new_score = score + VEL/1000
+    return new_score
 
 def directions(dino: Dino, obstacles: list, obstacle_ind: int) -> list:
 

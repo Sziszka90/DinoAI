@@ -8,7 +8,7 @@ from base import Base
 from background import Background
 from dino import Dino
 from draw import Draw
-from utils import directions, check_max_generations
+from utils import handle_speed, directions, check_max_generations, increase_score
 from decouple import config as get_env_var
 
 
@@ -17,6 +17,8 @@ WIN_HEIGHT = 700
 
 generation = 0
 
+VEL = handle_speed(int(get_env_var('SPEED')))
+
 def main_training(genomes: neat.DefaultGenome, config: neat.Config) -> None:
     print("****** Running training... ******")
 
@@ -24,11 +26,11 @@ def main_training(genomes: neat.DefaultGenome, config: neat.Config) -> None:
     nets = []
     ge = []
     dinos = []
-    obstacles = [Bird(495)]
+    obstacles = [Bird(495, VEL)]
 
-    base = Base()
-    background = Background()
-    draw = Draw()
+    base = Base(VEL)
+    background = Background(VEL)
+    draw = Draw(VEL)
     
     score = 0
     population_size = 0
@@ -95,7 +97,7 @@ def main_training(genomes: neat.DefaultGenome, config: neat.Config) -> None:
             if obstacle.x + obstacle.img.get_width() < 0:
                 rem.append(obstacle)
 
-            score += 0.01
+            score = increase_score(VEL,score)
             
             if obstacle.passed:
                 for g in ge:
@@ -128,11 +130,11 @@ def main_training(genomes: neat.DefaultGenome, config: neat.Config) -> None:
 def main_solution(genome: neat.DefaultGenome, config: neat.Config) -> None:
     print("****** Running solution... ******")
 
-    base = Base()
-    obstacles = [Bird(495)]
-    background = Background()
+    base = Base(VEL)
+    obstacles = [Bird(495,VEL)]
+    background = Background(VEL)
     dino = Dino()
-    draw = Draw()
+    draw = Draw(VEL)
 
     score = 0
     status = {}
@@ -176,7 +178,7 @@ def main_solution(genome: neat.DefaultGenome, config: neat.Config) -> None:
             if obstacle.x + obstacle.img.get_width() < 0:
                 rem.append(obstacle)
 
-            score += 0.01
+            score = increase_score(VEL,score)
             
             obstacle.move()
         

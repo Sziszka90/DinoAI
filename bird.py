@@ -2,7 +2,6 @@ import pygame
 import os
 from decouple import config as get_env_var
 from dino import *
-from utils import check_speed
 
 pygame.font.init()
 
@@ -12,18 +11,16 @@ BIRD_IMGS = [pygame.image.load(os.path.join("images", "bird_1.png")),
                pygame.image.load(os.path.join("images", "bird_2.png"))]
 
 class Bird:
-    VEL = int(get_env_var('SPEED'))
     ANIMATION_TIME = 5
     IMGS = BIRD_IMGS
 
-    check_speed(VEL)
-
-    def __init__(self, y):
+    def __init__(self, y, VEL):
         self.x = 1200
         self.y = y
         self.passed = False
         self.img_count_bird = 0
         self.img = self.IMGS[0]
+        self.VEL = VEL
 
     def move(self) -> None:
         self.x -= self.VEL

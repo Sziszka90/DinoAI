@@ -3,7 +3,6 @@ import os
 import random
 from decouple import config as get_env_var
 from dino import *
-from utils import check_speed
 
 pygame.font.init()
 
@@ -17,16 +16,14 @@ CACTUS_IMGS = [pygame.image.load(os.path.join("images", "LargeCactus1.png")),
                pygame.image.load(os.path.join("images", "SmallCactus3.png"))]
 
 class Cactus:
-    VEL = int(get_env_var('SPEED'))
     IMGS = CACTUS_IMGS
 
-    check_speed(VEL)
-
-    def __init__(self):
+    def __init__(self, VEL):
         self.x = 1200
         self.y = 550
         self.passed = False
         self.random_cactus = random.randrange(0, 6)
+        self.VEL = VEL
 
         if(self.random_cactus >= 3):
             self.y = 570
