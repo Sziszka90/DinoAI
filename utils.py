@@ -45,8 +45,7 @@ def replay_genome(genome_path: str="winner.pkl") -> neat.DefaultGenome:
     return genome
 
 def check_model(genome_path: str="winner.pkl") -> bool:
-    try:
-        with open(genome_path, "rb") as f:
-            return True
-    except IOError:
-        return False  
+    if(os.path.exists('./winner.pkl')):
+        return True
+    else:
+        return False
