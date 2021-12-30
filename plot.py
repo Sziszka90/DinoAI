@@ -16,7 +16,7 @@ def plot() -> None:
     plt.title('Training result')
     plt.xlabel('Generations')
     plt.ylabel('Fitness score')
-    plt.bar(max_generations, max_fitnesses)
+    plt.bar(max_generations, max_fitnesses, width=0.3)
     plt.xticks(range(1,len(max_generations)+1))
     plt.yticks(range(0, max(max_fitnesses)+1,500))
     plt.grid(color='grey', linestyle='dotted', linewidth=0.5)
