@@ -13,11 +13,6 @@ def handle_speed(velocity: int) -> int:
     else:
         return velocity+20
 
-def check_train(TRAIN: str) -> None:
-    if(TRAIN != "YES" and TRAIN != "NO"):
-        print("Please enter a valid value for TRAIN (YES or NO)")
-        sys.exit()
-
 def check_max_generations(MAXGENERATIONS: int) -> None:
     if(MAXGENERATIONS <= 0 or MAXGENERATIONS > 100):
         print("Max generations must be between 1 and 100")
@@ -48,3 +43,10 @@ def replay_genome(genome_path: str="winner.pkl") -> neat.DefaultGenome:
         sys.exit()
 
     return genome
+
+def check_model(genome_path: str="winner.pkl") -> bool:
+    try:
+        with open(genome_path, "rb") as f:
+            return True
+    except IOError:
+        return False  
