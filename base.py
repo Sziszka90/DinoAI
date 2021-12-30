@@ -1,6 +1,5 @@
 import pygame
 import os
-from decouple import config as get_env_var
 
 BASE_IMG = pygame.transform.scale2x(pygame.image.load(os.path.join("images", "Track.png")))
 
@@ -8,15 +7,15 @@ class Base:
     WIDTH = BASE_IMG.get_width()
     IMG = BASE_IMG
 
-    def __init__(self,VEL):
+    def __init__(self,velocity):
         self.y = 620
         self.x1 = 0
         self.x2 = self.WIDTH
-        self.VEL = VEL
+        self.velocity = velocity
 
     def move(self) -> None:
-        self.x1 -= self.VEL
-        self.x2 -= self.VEL
+        self.x1 -= self.velocity
+        self.x2 -= self.velocity
 
         if self.x1 + self.WIDTH < 0:
             self.x1 = self.x2 + self.WIDTH

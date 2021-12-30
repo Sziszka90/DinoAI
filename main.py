@@ -1,6 +1,7 @@
 from nn_config import *
 from decouple import config as get_env_var
 from utils import *
+from plot import plot
 
 check_training = (get_env_var('TRAIN'))
 
@@ -11,6 +12,7 @@ config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.D
 check_train(check_training)
 
 if(check_training == 'YES'):
-    run(config) 
+    run(config)
+    plot()
 elif(check_training == 'NO'):
     main_solution(replay_genome("winner.pkl"), config)

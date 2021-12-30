@@ -1,6 +1,5 @@
 import pygame
 import os
-from decouple import config as get_env_var
 from dino import *
 
 pygame.font.init()
@@ -14,16 +13,16 @@ class Bird:
     ANIMATION_TIME = 5
     IMGS = BIRD_IMGS
 
-    def __init__(self, y, VEL):
+    def __init__(self, y, velocity):
         self.x = 1200
         self.y = y
         self.passed = False
         self.img_count_bird = 0
         self.img = self.IMGS[0]
-        self.VEL = VEL
+        self.velocity = velocity
 
     def move(self) -> None:
-        self.x -= self.VEL
+        self.x -= self.velocity
 
         self.img_count_bird += 1
 

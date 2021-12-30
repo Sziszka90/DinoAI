@@ -10,6 +10,7 @@ from dino import Dino
 from draw import Draw
 from utils import handle_speed, directions, check_max_generations, increase_score
 from decouple import config as get_env_var
+from plot import collect_data
 
 
 WIN_WIDTH = 1200
@@ -17,7 +18,7 @@ WIN_HEIGHT = 700
 
 generation = 0
 
-VEL = handle_speed(int(get_env_var('SPEED')))
+velocity = handle_speed(int(get_env_var('SPEED')))
 
 def main_training(genomes: neat.DefaultGenome, config: neat.Config) -> None:
     print("****** Running training... ******")
@@ -26,11 +27,11 @@ def main_training(genomes: neat.DefaultGenome, config: neat.Config) -> None:
     nets = []
     ge = []
     dinos = []
-    obstacles = [Bird(495, VEL)]
+    obstacles = [Bird(495, velocity)]
 
-    base = Base(VEL)
-    background = Background(VEL)
-    draw = Draw(VEL)
+    base = Base(velocity)
+    background = Background(velocity)
+    draw = Draw(velocity)
     
     score = 0
     population_size = 0
@@ -97,7 +98,7 @@ def main_training(genomes: neat.DefaultGenome, config: neat.Config) -> None:
             if obstacle.x + obstacle.img.get_width() < 0:
                 rem.append(obstacle)
 
-            score = increase_score(VEL,score)
+            score = increase_score(velocity,score)
             
             if obstacle.passed:
                 for g in ge:
@@ -120,21 +121,25 @@ def main_training(genomes: neat.DefaultGenome, config: neat.Config) -> None:
         status["Fitness score: "] = round(max_fitness)
         status["Generation: "] = generation
         status["Population size: "] = population_size
-        
+    
         draw.adding_obstacle(obstacles)
 
         background.move()
         base.move()
+
+        if(len(dinos) == 0 or not run):
+            collect_data(status["Fitness score: "], status["Generation: "])
+
         draw.draw_window(win, background, dinos, obstacles, base, status)
 
 def main_solution(genome: neat.DefaultGenome, config: neat.Config) -> None:
     print("****** Running solution... ******")
 
-    base = Base(VEL)
-    obstacles = [Bird(495,VEL)]
-    background = Background(VEL)
+    base = Base(velocity)
+    obstacles = [Bird(495,velocity)]
+    background = Background(velocity)
     dino = Dino()
-    draw = Draw(VEL)
+    draw = Draw(velocity)
 
     score = 0
     status = {}
@@ -166,6 +171,8 @@ def main_solution(genome: neat.DefaultGenome, config: neat.Config) -> None:
         elif output[1] > output[0] and output[1] > 0.5:
             dino.down()
 
+        dino.motion()
+
         rem = []
         
         for obstacle in obstacles:
@@ -178,7 +185,7 @@ def main_solution(genome: neat.DefaultGenome, config: neat.Config) -> None:
             if obstacle.x + obstacle.img.get_width() < 0:
                 rem.append(obstacle)
 
-            score = increase_score(VEL,score)
+            score = increase_score(velocity,score)
             
             obstacle.move()
         
@@ -191,9 +198,9 @@ def main_solution(genome: neat.DefaultGenome, config: neat.Config) -> None:
 
         draw.adding_obstacle(obstacles)
 
-        dino.motion()
         background.move()
         base.move()
+
         draw.draw_window(win, background, [dino], obstacles, base, status)
 
 def run(config: neat.Config) -> None:
@@ -207,5 +214,6 @@ def run(config: neat.Config) -> None:
     check_max_generations(MAXGENERATIONS)
 
     winner = p.run(main_training, MAXGENERATIONS)
+    pygame.quit()
 
     pickle.dump( winner, open( "winner.pkl", "wb"))

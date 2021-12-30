@@ -18,12 +18,12 @@ CACTUS_IMGS = [pygame.image.load(os.path.join("images", "LargeCactus1.png")),
 class Cactus:
     IMGS = CACTUS_IMGS
 
-    def __init__(self, VEL):
+    def __init__(self, velocity):
         self.x = 1200
         self.y = 550
         self.passed = False
         self.random_cactus = random.randrange(0, 6)
-        self.VEL = VEL
+        self.velocity = velocity
 
         if(self.random_cactus >= 3):
             self.y = 570
@@ -31,7 +31,7 @@ class Cactus:
         self.img = self.IMGS[self.random_cactus]
 
     def move(self) -> None:
-        self.x -= self.VEL
+        self.x -= self.velocity
 
     def draw(self, win: pygame.Surface) -> None:
         win.blit(self.img, (self.x, self.y))
