@@ -65,7 +65,7 @@ def directions(dino: Dino, obstacles: list, obstacle_ind: int) -> list:
 
     return distance_to_obstacle + width_of_obstacle + height_of_obstacle + distance_from_ground
 
-def replay_genome(genome_path: str="winner.pkl") -> neat.DefaultGenome:
+def replay_genome(genome_path: str) -> neat.DefaultGenome:
     try:
         with open(genome_path, "rb") as f:
             genome = pickle.load(f)
