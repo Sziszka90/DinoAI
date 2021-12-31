@@ -28,7 +28,7 @@ def check_genome_path() -> str:
         if(os.path.exists('./' + genome_path)):
             return genome_path
         else:
-            print("Genome not found")
+            print("****** Start genome training! ******")
             return None
     else:
         print("Please give a genome path")
@@ -70,7 +70,6 @@ def replay_genome(genome_path: str) -> neat.DefaultGenome:
         with open(genome_path, "rb") as f:
             genome = pickle.load(f)
     except IOError:
-        print("****** Start genome training! ******")
         sys.exit()
 
     return genome
