@@ -8,7 +8,7 @@ from base import Base
 from background import Background
 from dino import Dino
 from draw import Draw
-from utils import handle_speed, directions, check_max_generations, increase_score
+from utils import *
 from decouple import config as get_env_var
 from plot import collect_data
 
@@ -210,10 +210,7 @@ def run(config: neat.Config) -> None:
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
 
-    MAXGENERATIONS = int(get_env_var('MAXGENERATIONS'))
-    check_max_generations(MAXGENERATIONS)
-
-    winner = p.run(main_training, MAXGENERATIONS)
+    winner = p.run(main_training, check_max_generations())
     pygame.quit()
 
-    pickle.dump( winner, open( "winner.pkl", "wb"))
+    pickle.dump( winner, open(return_genome_path(), "wb"))

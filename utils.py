@@ -2,6 +2,7 @@ import sys
 from dino import *
 import pickle
 import neat
+from decouple import config as get_env_var
 
 def handle_speed(velocity: int) -> int:
     if(velocity <= 0):
@@ -13,9 +14,39 @@ def handle_speed(velocity: int) -> int:
     else:
         return velocity+20
 
-def check_max_generations(MAXGENERATIONS: int) -> None:
-    if(MAXGENERATIONS <= 0 or MAXGENERATIONS > 100):
+def check_max_generations() -> int:
+    maxgenerations = int(get_env_var('MAXGENERATIONS'))
+    if(maxgenerations <= 0 or maxgenerations > 100):
         print("Max generations must be between 1 and 100")
+        sys.exit()
+    else:
+        return maxgenerations
+
+def check_genome_path() -> str:
+    genome_path = get_env_var('GENOME_NAME')
+    if(genome_path != ""):
+        if(os.path.exists('./' + genome_path)):
+            return genome_path
+        else:
+            print("Genome not found")
+            return None
+    else:
+        print("Please give a genome path")
+        sys.exit()
+    
+def return_genome_path() -> str:
+    return get_env_var('GENOME_NAME')
+
+def check_config_path() -> str:
+    config_path = get_env_var('CONFIG_NAME')
+    if(config_path != ""):
+        if(os.path.exists('./' + config_path)):
+            return config_path
+        else:
+            print("Config not found")
+            sys.exit()
+    else:
+        print("Please give a config path")
         sys.exit()
 
 def increase_score(velocity: int,score: int) -> int:
@@ -39,13 +70,7 @@ def replay_genome(genome_path: str="winner.pkl") -> neat.DefaultGenome:
         with open(genome_path, "rb") as f:
             genome = pickle.load(f)
     except IOError:
-        print("****** Please train the model! ******")
+        print("****** Start genome training! ******")
         sys.exit()
 
     return genome
-
-def check_model(genome_path: str="winner.pkl") -> bool:
-    if(os.path.exists('./winner.pkl')):
-        return True
-    else:
-        return False
