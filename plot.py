@@ -13,9 +13,9 @@ def plot() -> None:
     global max_fitnesses
     global max_generations
     plt.figure("Plot")
-    plt.title('Training result')
-    plt.xlabel('Generations')
-    plt.ylabel('Fitness score')
+    plt.title("Training result")
+    plt.xlabel("Generations")
+    plt.ylabel("Fitness score")
     plt.bar(max_generations, max_fitnesses, width=0.3)
     plt.xticks(range(1,len(max_generations)+1))
     plt.yticks(range(0, max(max_fitnesses)+1,500))

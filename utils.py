@@ -22,24 +22,29 @@ def check_max_generations() -> int:
     else:
         return maxgenerations
 
-def check_genome_path() -> str:
+def check_genome_path() -> bool:
     genome_path = get_env_var('GENOME_NAME')
-    if(genome_path != ""):
+    if(genome_path != ''):
         if(os.path.exists('./' + genome_path)):
-            return genome_path
+            return True
         else:
             print("****** Start genome training! ******")
-            return None
+            return False
     else:
-        print("Please give a genome path")
+        print("Please give a genome name")
         sys.exit()
     
 def return_genome_path() -> str:
-    return get_env_var('GENOME_NAME')
+    genome_path = get_env_var('GENOME_NAME')
+    if(genome_path != ''):
+        return get_env_var('GENOME_NAME')
+    else:
+        print("Please give a genome name")
+        sys.exit()
 
 def check_config_path() -> str:
     config_path = get_env_var('CONFIG_NAME')
-    if(config_path != ""):
+    if(config_path != ''):
         if(os.path.exists('./' + config_path)):
             return config_path
         else:
@@ -70,6 +75,7 @@ def replay_genome(genome_path: str) -> neat.DefaultGenome:
         with open(genome_path, "rb") as f:
             genome = pickle.load(f)
     except IOError:
+        print("Error while opening genome")
         sys.exit()
 
     return genome
