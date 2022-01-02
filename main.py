@@ -1,4 +1,4 @@
-from training_solution import *
+from agent import *
 from helpers import *
 from plot import plot
 
