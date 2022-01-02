@@ -26,7 +26,7 @@ def check_genome_path() -> bool:
     genome_path = get_env_var('GENOME_NAME')
     if(genome_path != ''):
         if(os.path.exists('./' + genome_path)):
-            print("****** Running solution... ******")
+            print("****** Running existing genome... ******")
             return True
         else:
             print("****** Genome doesn't exist! ******")
