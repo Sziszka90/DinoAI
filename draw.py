@@ -70,7 +70,7 @@ class Draw:
         for obstacle in obstacles:
             obstacle.draw(win)
 
-        pygame.display.set_caption('Mozilla Dino AI')
+        pygame.display.set_caption('Dino AI')
 
         pygame.display.update()
 
