@@ -8,7 +8,7 @@ from base import Base
 from background import Background
 from dino import Dino
 from draw import Draw
-from utils import *
+from helpers import *
 from decouple import config as get_env_var
 from plot import collect_data
 
@@ -18,11 +18,9 @@ WIN_HEIGHT = 700
 
 generation = 0
 
-velocity = handle_speed(int(get_env_var('SPEED')))
+velocity = check_speed(int(get_env_var('SPEED')))
 
-def main_training(genomes: neat.DefaultGenome, config: neat.Config) -> None:
-    print("****** Running training... ******")
-
+def training(genomes: neat.DefaultGenome, config: neat.Config) -> None:
     global generation
     nets = []
     ge = []
@@ -132,9 +130,7 @@ def main_training(genomes: neat.DefaultGenome, config: neat.Config) -> None:
 
         draw.draw_window(win, background, dinos, obstacles, base, status)
 
-def main_solution(genome: neat.DefaultGenome, config: neat.Config) -> None:
-    print("****** Running solution... ******")
-
+def solution(genome: neat.DefaultGenome, config: neat.Config) -> None:
     base = Base(velocity)
     obstacles = [Bird(495,velocity)]
     background = Background(velocity)
@@ -210,7 +206,7 @@ def run(config: neat.Config) -> None:
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
 
-    winner = p.run(main_training, check_max_generations())
+    winner = p.run(training, check_max_generations())
     pygame.quit()
 
     pickle.dump( winner, open(return_genome_path(), "wb"))

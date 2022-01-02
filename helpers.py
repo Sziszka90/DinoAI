@@ -4,7 +4,7 @@ import pickle
 import neat
 from decouple import config as get_env_var
 
-def handle_speed(velocity: int) -> int:
+def check_speed(velocity: int) -> int:
     if(velocity <= 0):
         print("Increase speed! Min. 1")
         sys.exit()
@@ -26,9 +26,11 @@ def check_genome_path() -> bool:
     genome_path = get_env_var('GENOME_NAME')
     if(genome_path != ''):
         if(os.path.exists('./' + genome_path)):
+            print("****** Running solution... ******")
             return True
         else:
-            print("****** Start genome training! ******")
+            print("****** Genome doesn't exist! ******")
+            print("****** Running training... ******")
             return False
     else:
         print("Please give a genome name")
