@@ -1,0 +1,16 @@
+digraph {
+	node [fontsize=9 height=0.2 shape=circle width=0.2]
+	"Distance to obstacle" [fillcolor=lightgray shape=box style=filled]
+	"Width of obstacle" [fillcolor=lightgray shape=box style=filled]
+	"Height of obstacle" [fillcolor=lightgray shape=box style=filled]
+	"Distance from ground" [fillcolor=lightgray shape=box style=filled]
+	Jump [fillcolor=lightblue style=filled]
+	Down [fillcolor=lightblue style=filled]
+	"Distance to obstacle" -> Jump [color=green penwidth=0.6174744297249047 style=solid]
+	"Distance to obstacle" -> Down [color=green penwidth=0.9253789712360672 style=solid]
+	"Width of obstacle" -> Down [color=red penwidth=0.5864417210820045 style=solid]
+	"Height of obstacle" -> Jump [color=green penwidth=0.5536882142829397 style=solid]
+	"Height of obstacle" -> Down [color=red penwidth=0.6311414825472205 style=solid]
+	"Distance from ground" -> Jump [color=red penwidth=0.7346144683543754 style=solid]
+	"Distance from ground" -> Down [color=green penwidth=0.7408411369785596 style=solid]
+}

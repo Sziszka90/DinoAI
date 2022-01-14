@@ -1,0 +1,11 @@
+name: dinoai
+dependencies:
+    - pip:
+        - pygame==2.1.0
+        - pygame-menu==4.2.2
+        - python-decouple==3.5
+        - neat-python==0.92
+        - matplotlib==3.4.3
+        - graphviz==2.5.0
+        - tk==0.1.0
+        - pyinstaller==4.7.0

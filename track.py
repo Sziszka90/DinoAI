@@ -1,13 +1,19 @@
-import pygame
 import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = 'hide'
+import pygame
+import helpers
 
-BASE_IMG = pygame.transform.scale2x(pygame.image.load(os.path.join("images", "Track.png")))
 
-class Base:
-    WIDTH = BASE_IMG.get_width()
-    IMG = BASE_IMG
+images = helpers.get_images('track')
+helpers.check_images(images)
 
+TRACK_IMG = pygame.transform.scale2x(pygame.image.load(os.path.join('resources/images', images[0])))
+WIDTH = TRACK_IMG.get_width()
+
+class Track:
     def __init__(self,velocity):
+        self.IMG = TRACK_IMG
+        self.WIDTH = WIDTH
         self.y = 620
         self.x1 = 0
         self.x2 = self.WIDTH

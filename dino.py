@@ -1,51 +1,51 @@
-import pygame
 import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = 'hide'
+import pygame
+import helpers
 
-DINO_IMGS = [pygame.image.load(os.path.join("images", "DinoJump.png")),
-             pygame.image.load(os.path.join("images", "DinoRun1.png")),
-             pygame.image.load(os.path.join("images", "DinoRun2.png")),
-             pygame.image.load(os.path.join("images", "dino_down_1.png")),
-             pygame.image.load(os.path.join("images", "dino_down_2.png"))]
+
+images = helpers.get_images('dino')
+helpers.check_images(images)
+
+DINO_IMGS = tuple([pygame.image.load(os.path.join('resources/images', img)) for img in images])
+ANIMATION_TIME = 5
+
 
 class Dino:
-    ANIMATION_TIME = 5
-    JUMP_TIME = 15
-    IMGS = DINO_IMGS
-
     def __init__(self):
-        self.tick_count = 0
+        self.IMGS = DINO_IMGS
         self.img = self.IMGS[0]
+        self.ANIMATION_TIME = ANIMATION_TIME
         self.x = 400
         self.y = 550
-        self.jump_flag = False
-        self.down_flag = False
+        self.jump = False
+        self.down = False
+        self.dead = False
+        self.tick_count = 0
         self.img_count_run = 0
         self.img_count_jump = 0
         self.img_count_down = 0
-
-    def jump(self) -> None:
-        self.jump_flag = True
-
-    def down(self) -> None:
-        self.down_flag = True
+        self.img_count_dead = 0
 
     def motion(self) -> None:
-        if(self.jump_flag):
+        if(self.jump):
             self.img_count_jump += 1
 
-            if self.img_count_jump < self.JUMP_TIME:
+            if self.img_count_jump < 15:
                 self.img = self.IMGS[0]
 
-            if(self.img_count_jump < self.JUMP_TIME/2):
-                self.y -= 25
+            if(self.img_count_jump <= 3):
+                self.y -= 50
+            elif(self.img_count_jump >= 3 and self.img_count_jump < 12):
+                pass
             else:
-                self.y += 25
+                self.y += 50
                 if(self.y >= 550):
                     self.y = 550
                     self.img_count_jump = 0
-                    self.jump_flag = False
+                    self.jump = False
     
-        elif(self.down_flag):
+        elif(self.down):
             self.img_count_down += 1
 
             self.y = 580
@@ -56,7 +56,15 @@ class Dino:
                 self.img = self.IMGS[4]
             elif self.img_count_down > self.ANIMATION_TIME*2:
                 self.img_count_down = 0
-                self.down_flag = False
+                self.down = False
+
+        elif(self.dead):
+            self.img_count_dead += 1
+            self.y = 550
+            self.img = self.IMGS[5]
+            self.img_count_dead = 0
+            self.dead = False
+
         else:
             self.img_count_run += 1
 

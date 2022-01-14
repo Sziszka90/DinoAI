@@ -1,0 +1,52 @@
+{
+    "background": [
+                    "background.png"
+                  ],
+
+    "dino":       [
+                    "dino_jump.png",
+                    "dino_run_1.png",
+                    "dino_run_2.png",
+                    "dino_down_1.png",
+                    "dino_down_2.png",
+                    "dino_dead.png"
+                  ],
+
+    "track" :     [
+                    "track.png"
+                  ],
+
+    "cactus":     [
+                    "large_cactus_1.png",
+                    "large_cactus_2.png",
+                    "large_cactus_3.png",
+                    "small_cactus_1.png",
+                    "small_cactus_2.png",
+                    "small_cactus_3.png"
+                  ],
+
+    "bird":       [
+                    "bird_1.png", 
+                    "bird_2.png"
+                  ],
+
+    "node_names": {
+                    "-1":"Distance to obstacle",
+                    "-2": "Width of obstacle",
+                    "-3": "Height of obstacle",
+                    "-4": "Distance from ground",
+                    "0": "Jump",
+                    "1": "Down"
+                  },
+
+    "max_gen"      : "50",
+
+    "genome_name"  : "winner",
+
+    "genome_folder": "neural-network",
+
+    "config_name"  : "nn-config.txt"
+
+
+}
+

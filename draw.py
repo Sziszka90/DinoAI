@@ -1,12 +1,15 @@
+from __future__ import annotations
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = 'hide'
 import random
 import pygame
-from cactus import *
-from bird import *
-from dino import *
-from base import *
-from background import *
+from obstacles import Bird, Cactus
 
-STAT_FONT = pygame.font.SysFont("comicsans", 50)
+
+pygame.font.init()
+STAT_FONT = pygame.font.SysFont('comicsans', 40)
+TITLE_FONT = pygame.font.SysFont('comicsans', 40)
+
 
 class Draw:
     def __init__(self, velocity):
@@ -41,9 +44,9 @@ class Draw:
 
             if (self.bird_tick == self.random_num):
                 if(self.random_bird_height == 0):
-                    obstacles.append(Bird(550,self.velocity))
+                    obstacles.append(Bird('down',self.velocity))
                 elif(self.random_bird_height == 1):
-                    obstacles.append(Bird(490,self.velocity))
+                    obstacles.append(Bird('up',self.velocity))
                 self.generate_random_num = False
                 self.bird_tick = 0
 
@@ -52,7 +55,7 @@ class Draw:
         self.cactus_tick = 0
         self.bird_tick = 0
 
-    def draw_window(self, win: pygame.Surface, background: Background, dinos: Dino, obstacles: list, base: Base, status: dict) -> None:
+    def draw_window(self, win: pygame.Surface, background: 'Background', dinos: list, obstacles: list, base: 'Track', status: dict, start: bool, gameover: bool=False) -> None:
         background.draw(win)
 
         state_pos_y = 10
@@ -70,7 +73,14 @@ class Draw:
         for obstacle in obstacles:
             obstacle.draw(win)
 
+        if(gameover):
+            text = TITLE_FONT.render('GAME OVER!',1,(0,0,0))
+            win.blit(text,(460, 250))
+
+        if(not start):
+            text = TITLE_FONT.render('Press SPACE to start',1,(0,0,0))
+            win.blit(text,(380, 300))
+
         pygame.display.set_caption('Dino AI')
 
         pygame.display.update()
-

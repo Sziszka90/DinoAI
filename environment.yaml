@@ -1,7 +1,0 @@
-name: dinoai
-dependencies:
-    - pip:
-        - pygame==2.1.0
-        - python-decouple==3.5
-        - neat-python==0.92
-        - matplotlib==3.4.3

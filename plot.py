@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 
+
 max_fitnesses = []
 max_generations = []
 
@@ -12,10 +13,10 @@ def collect_data(max_fitness: int, generation_number: int) -> None:
 def plot() -> None:
     global max_fitnesses
     global max_generations
-    plt.figure("Plot")
-    plt.title("Training result")
-    plt.xlabel("Generations")
-    plt.ylabel("Fitness score")
+    plt.figure('Plot')
+    plt.title('Training result')
+    plt.xlabel('Generations')
+    plt.ylabel('Fitness score')
     plt.bar(max_generations, max_fitnesses, width=0.3)
     plt.xticks(range(1,len(max_generations)+1))
     plt.yticks(range(0, max(max_fitnesses)+1,500))
@@ -25,3 +26,6 @@ def plot() -> None:
         plt.text(index+1, value, str(value),ha='center', va='bottom')
 
     plt.show()
+
+    max_fitnesses.clear()
+    max_generations.clear()
